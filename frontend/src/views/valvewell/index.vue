@@ -42,7 +42,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in rows" :key="String(row.id)">
+        <tr v-for="row in rows" :key="String(row.id)" :class="{ 'row-linked': row['来源模块'] === '循环泵运维' }">
           <td v-for="column in columns" :key="column">{{ row[column] ?? '—' }}</td>
           <td>{{ row.status }}</td>
           <td class="row-actions">
@@ -82,7 +82,7 @@ import {
 import type { EntryRow } from '@/data/types'
 
 const meta = moduleMeta('valvewell')
-const columns = ["井编号", "所属管段", "井盖状况", "阀门型号", "检查人", "检查日期", "养护措施", "井体状态"]
+const columns = ["井编号", "所属管段", "井盖状况", "阀门型号", "检查人", "检查日期", "养护措施", "井体状态", "来源模块", "来源单号"]
 const actions = ["提交检查", "确认养护", "提出维修"]
 const statuses = ["待检查", "检查中", "已养护", "需维修"]
 const stats = [{"label": "待检查阀门井", "value": 0}, {"label": "已养护阀门井", "value": 0}, {"label": "需维修阀门井", "value": 0}]

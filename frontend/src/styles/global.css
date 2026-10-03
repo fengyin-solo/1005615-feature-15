@@ -35,3 +35,31 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .error-text { color: #b42318; }
 .status-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 10px; font-size: 12px; color: var(--muted); }
 .legend-item { background: #eef2f7; border-radius: 999px; padding: 2px 10px; }
+.legend-item.clickable { cursor: pointer; text-decoration: none; color: var(--muted); }
+.legend-item.clickable.active { background: var(--brand); color: #fff; }
+.reminder-panel { display: flex; gap: 12px; margin-bottom: 12px; }
+.reminder-col { flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.reminder-title { font-size: 13px; margin: 0 0 8px; }
+.reminder-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.reminder-item { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; }
+.reminder-item.muted { color: var(--muted); }
+.reminder-name { font-weight: 600; }
+.reminder-sub { width: 100%; font-size: 12px; color: var(--muted); }
+.reminder-empty { font-size: 12px; color: var(--muted); margin: 0; }
+.tag { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; line-height: 1.6; white-space: nowrap; }
+.tag-warn { background: #fef3c7; color: #92400e; }
+.tag-danger { background: #fee2e2; color: #b42318; }
+.tag-muted { background: #eef2f7; color: var(--muted); }
+.tag-ok { background: #dcfce7; color: #166534; }
+.row-abnormal { background: #fff7f5; }
+.row-linked { background: #f0f7ff; }
+.ok-text { color: #166534; }
+.link:disabled { color: #9aa4b2; cursor: not-allowed; }
+.modal-mask { position: fixed; inset: 0; background: rgba(16, 24, 40, 0.45); display: flex; align-items: center; justify-content: center; z-index: 20; }
+.modal { background: #fff; border-radius: 10px; padding: 18px 20px; width: 420px; max-height: 86vh; overflow: auto; }
+.modal.wide { width: 760px; }
+.modal-title { margin: 0 0 12px; font-size: 15px; }
+.modal-field { display: block; margin-bottom: 12px; }
+.modal-field span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.modal-field input, .cycle-input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 13px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
