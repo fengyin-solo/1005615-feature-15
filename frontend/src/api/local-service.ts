@@ -1,5 +1,12 @@
 import { MODULE_BY_KEY } from '@/data/modules'
 import { allRows, listRows, resetRows, saveRows } from '@/data/local-store'
+import {
+  PUMP_KEY,
+  decoratePumpRows,
+  isPumpRowAbnormal,
+  runPumpAction,
+  type OperatorRole,
+} from '@/data/circpump'
 import type { ActionResult, EntryRow, ModuleMeta, OverviewResult, PageResult } from '@/data/types'
 
 // 会写进数据的「往回走」动作：命中就把这条记录标成异常态，看板上能一眼看出来。
@@ -23,12 +30,31 @@ export function filterRows(rows: EntryRow[], filters: Record<string, string>): E
   )
 }
 
+// 循环泵台账逐条做数值校验：异常的打标后照样返回原始字段，绝不让一条坏数据拖垮整屏。
+function decorate(key: string, rows: EntryRow[]): EntryRow[] {
+  if (key !== PUMP_KEY) {
+    return rows
+  }
+  return decoratePumpRows(rows).map((pump, index) => ({
+    ...rows[index],
+    abnormal: rows[index].abnormal || isPumpRowAbnormal(pump),
+  }))
+}
+
 export function listEntries(key: string, filters: Record<string, string> = {}): PageResult {
-  const matched = filterRows(listRows(key), filters)
+  const matched = filterRows(decorate(key, listRows(key)), filters)
   return { items: matched, total: matched.length, page: 1, size: matched.length }
 }
 
-export function runAction(key: string, id: number, action: string): ActionResult {
+export function runAction(
+  key: string,
+  id: number,
+  action: string,
+  role: OperatorRole = '值班员',
+): ActionResult {
+  if (key === PUMP_KEY) {
+    return runPumpAction(id, action, role)
+  }
   const meta = moduleMeta(key)
   const target = meta.actionTargets[action]
   if (!target) {
@@ -65,7 +91,7 @@ export function exportEntries(key: string): { filename: string; content: string 
   const meta = moduleMeta(key)
   const header = ['编号', ...meta.fields, '当前状态']
   const lines = [header.join(',')]
-  for (const row of listRows(key)) {
+  for (const row of decorate(key, listRows(key))) {
     lines.push([row.id, ...meta.fields.map((field) => row[field] ?? ''), row.status].join(','))
   }
   return { filename: `${meta.name}-清单.csv`, content: `\uFEFF${lines.join('\n')}` }
@@ -87,7 +113,7 @@ export function downloadEntries(key: string): void {
 export function loadOverview(): OverviewResult {
   const rows = allRows()
   const modules = [...MODULE_BY_KEY.values()].map((meta) => {
-    const entries = rows[meta.key] ?? []
+    const entries = decorate(meta.key, rows[meta.key] ?? [])
     return {
       name: meta.name,
       created: entries.length,
